@@ -11,133 +11,37 @@ function time() {
 
 setInterval(time, 1000);
 
+let minute = document.querySelector(".minute");
+let second = document.querySelector(".second");
+let start = document.querySelector(".start");
+let pause = document.querySelector(".pause");
+let reset = document.querySelector(".reset");
 
+let intervalId;
+let minuteCount = 25;
+let secondCount = 0;
+start.addEventListener("click",()=>{
+    intervalId = setInterval(()=>{
+        secondCount--;
+        if(secondCount < 0){
+            secondCount = 59;
+            minuteCount--;
+        }
+        minute.innerText = minuteCount;
+        second.innerText = secondCount;
+    },1000)
+});
 
-// var pomodoro = {
-//     minutes : 0,
-//     seconds : 0,
-//     fillerHeight : 0,
-//     fillerIncrement : 0,
-//     interval : null,
-//     minutesDom : null,
-//     secondsDom : null,
-//     fillerDom : null,
-//     init : function(){
-//       var self = this;
-//       this.minutesDom = document.querySelector('#minutes');
-//       this.secondsDom = document.querySelector('#seconds');
-//       this.fillerDom = document.querySelector('#filler');
-//       this.interval = setInterval(function(){
-//         self.intervalCallback.apply(self);
-//       }, 1000);
-//       document.querySelector('#work').onclick = function(){
-//         self.startWork.apply(self);
-//       };
-//       document.querySelector('#shortBreak').onclick = function(){
-//         self.startShortBreak.apply(self);
-//       };
-//       document.querySelector('#longBreak').onclick = function(){
-//         self.startLongBreak.apply(self);
-//       };
-//       document.querySelector('#stop').onclick = function(){
-//         self.stopTimer.apply(self);
-//       };
-//     },
-//     resetVariables : function(mins, secs, started){
-//       this.minutes = mins;
-//       this.seconds = secs;
-//       this.started = started;
-//       this.fillerIncrement = 200/(this.minutes*60);
-//       this.fillerHeight = 0;  
-//     },
-//     startWork: function() {
-//       this.resetVariables(25, 0, true);
-//     },
-//     startShortBreak : function(){
-//       this.resetVariables(5, 0, true);
-//     },
-//     startLongBreak : function(){
-//       this.resetVariables(15, 0, true);
-//     },
-//     stopTimer : function(){
-//       this.resetVariables(25, 0, false);
-//       this.updateDom();
-//     },
-//     toDoubleDigit : function(num){
-//       if(num < 10) {
-//         return "0" + parseInt(num, 10);
-//       }
-//       return num;
-//     },
-//     updateDom : function(){
-//       this.minutesDom.innerHTML = this.toDoubleDigit(this.minutes);
-//       this.secondsDom.innerHTML = this.toDoubleDigit(this.seconds);
-//       this.fillerHeight = this.fillerHeight + this.fillerIncrement;
-//       this.fillerDom.style.height = this.fillerHeight + 'px';
-//     },
-//     intervalCallback : function(){
-//       if(!this.started) return false;
-//       if(this.seconds == 0) {
-//         if(this.minutes == 0) {
-//           this.timerComplete();
-//           return;
-//         }
-//         this.seconds = 59;
-//         this.minutes--;
-//       } else {
-//         this.seconds--;
-//       }
-//       this.updateDom();
-//     },
-//     timerComplete : function(){
-//       this.started = false;
-//       this.fillerHeight = 0;
-//     }
-// };
-// window.onload = function(){
-//   pomodoro.init();
-// };
-
-
-
-let istenilenSure = 25;
-let toplamSaniye = istenilenSure * 60;
-let sayacElement = document.querySelector("#sayac");
-
-let sayacBaslat = setInterval(()=>{
-    if (toplamSaniye <= 0) {
-        clearInterval(sayacBaslat);
-        sayacElement.innerHTML = "Sayac sonlandi:";
-        
-    }else{
-        toplamSaniye--;
-        const dakika = Math.floor(toplamSaniye / 60) % 60;
-        const saniye = Math.floor(toplamSaniye % 60);
-
-        sayacElement.innerHTML = `${format(dakika)}:${format(saniye)}`;
-    }
-
-
-},1000);
-function format(a){
-    return a < 10 ? `0${a}` : a;
-}
-
-let pause = document.querySelector("#pause");
-let reset = document.querySelector("#reset");
-
-
-
-
-reset.onclick = function(){
-    clearInterval(sayacBaslat);
-    sayacElement.innerHTML = `${25}:${0}${0}`;
-}
-pause.onclick = function(){
-    clearInterval(sayacBaslat);
-    sayacElement.innerHTML = `${format(dakika)}:${format(saniye)}`;
-}
-
+reset.addEventListener("click",()=>{
+    clearInterval(intervalId);
+    minute.innerText = "25";
+    second.innerText = "00";
+    minuteCount = 25;
+    secondCount = 0;
+})
+pause.addEventListener("click",()=>{
+    clearInterval(intervalId);
+})
 
 let ul =document.querySelector(".ul");
 let undo = document.querySelector(".undo");
@@ -159,10 +63,8 @@ undo.addEventListener("click",(e)=>{
         <div class="list-div">
             ${input.value}
             <button class="delete-button">Add</button>
-
         </div>
     </li>
-
 `
 errorMsg.classList.replace("d-block","d-none");
     }
